@@ -47,6 +47,18 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   intl: ^0.19.0
 
+  # Calendar and date/time
+  table_calendar: ^3.0.9
+
+  # Notifications
+  flutter_local_notifications: ^17.2.2
+
+  # File picker for import/export
+  file_picker: ^8.1.2
+
+  # JSON for data export
+  csv: ^6.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

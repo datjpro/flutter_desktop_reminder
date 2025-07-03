@@ -1,17 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'providers/notes_provider.dart';
-import 'screens/home_screen.dart';
+import 'screens/home_screen_enhanced.dart';
 
 void main() {
-  // Initialize database for desktop platforms
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-  }
-
   runApp(const MyApp());
 }
 
@@ -29,7 +21,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           appBarTheme: const AppBarTheme(centerTitle: true),
         ),
-        home: const HomeScreen(),
+        home: const HomeScreenEnhanced(),
         debugShowCheckedModeBanner: false,
       ),
     );

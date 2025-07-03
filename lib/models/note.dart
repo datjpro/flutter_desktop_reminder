@@ -5,7 +5,12 @@ class Note {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? category;
+  final List<String> tags;
   final bool isFavorite;
+  final bool isCompleted;
+  final DateTime? scheduledDate;
+  final int priority; // 1: Low, 2: Medium, 3: High
+  final String? reminderType; // 'none', 'notification', 'email'
 
   Note({
     this.id,
@@ -14,7 +19,12 @@ class Note {
     required this.createdAt,
     required this.updatedAt,
     this.category,
+    this.tags = const [],
     this.isFavorite = false,
+    this.isCompleted = false,
+    this.scheduledDate,
+    this.priority = 2,
+    this.reminderType,
   });
 
   // Convert Note to Map for database storage
@@ -26,7 +36,12 @@ class Note {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
       'category': category,
+      'tags': tags.join(','), // Store tags as comma-separated string
       'isFavorite': isFavorite ? 1 : 0,
+      'isCompleted': isCompleted ? 1 : 0,
+      'scheduledDate': scheduledDate?.millisecondsSinceEpoch,
+      'priority': priority,
+      'reminderType': reminderType,
     };
   }
 
@@ -39,7 +54,18 @@ class Note {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt']),
       category: map['category'],
+      tags:
+          map['tags'] != null && map['tags'].isNotEmpty
+              ? map['tags'].split(',').where((tag) => tag.isNotEmpty).toList()
+              : [],
       isFavorite: map['isFavorite'] == 1,
+      isCompleted: map['isCompleted'] == 1,
+      scheduledDate:
+          map['scheduledDate'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(map['scheduledDate'])
+              : null,
+      priority: map['priority'] ?? 2,
+      reminderType: map['reminderType'],
     );
   }
 
@@ -51,7 +77,12 @@ class Note {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? category,
+    List<String>? tags,
     bool? isFavorite,
+    bool? isCompleted,
+    DateTime? scheduledDate,
+    int? priority,
+    String? reminderType,
   }) {
     return Note(
       id: id ?? this.id,
@@ -60,35 +91,43 @@ class Note {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       category: category ?? this.category,
+      tags: tags ?? this.tags,
       isFavorite: isFavorite ?? this.isFavorite,
+      isCompleted: isCompleted ?? this.isCompleted,
+      scheduledDate: scheduledDate ?? this.scheduledDate,
+      priority: priority ?? this.priority,
+      reminderType: reminderType ?? this.reminderType,
     );
   }
 
+  // Helper getters
+  String get priorityText {
+    switch (priority) {
+      case 1:
+        return 'Low';
+      case 3:
+        return 'High';
+      default:
+        return 'Medium';
+    }
+  }
+
+  bool get hasScheduledDate => scheduledDate != null;
+  bool get isOverdue =>
+      scheduledDate != null &&
+      scheduledDate!.isBefore(DateTime.now()) &&
+      !isCompleted;
+
   @override
   String toString() {
-    return 'Note{id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, category: $category, isFavorite: $isFavorite}';
+    return 'Note{id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, category: $category, tags: $tags, isFavorite: $isFavorite, isCompleted: $isCompleted, scheduledDate: $scheduledDate, priority: $priority, reminderType: $reminderType}';
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Note &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          title == other.title &&
-          content == other.content &&
-          createdAt == other.createdAt &&
-          updatedAt == other.updatedAt &&
-          category == other.category &&
-          isFavorite == other.isFavorite;
+      other is Note && runtimeType == other.runtimeType && id == other.id;
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      title.hashCode ^
-      content.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode ^
-      category.hashCode ^
-      isFavorite.hashCode;
+  int get hashCode => id.hashCode;
 }
