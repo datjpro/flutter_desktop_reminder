@@ -6,7 +6,7 @@ import '../widgets/note_card_enhanced.dart';
 import '../widgets/search_bar_widget.dart';
 import '../widgets/category_chips.dart';
 import '../widgets/filter_bottom_sheet.dart';
-import 'add_edit_note_screen.dart';
+import 'add_edit_note_screen_luxury.dart';
 import 'calendar_screen_enhanced.dart';
 
 class HomeScreenEnhanced extends StatefulWidget {
@@ -323,7 +323,7 @@ class _HomeScreenEnhancedState extends State<HomeScreenEnhanced> {
   void _navigateToAddNote(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AddEditNoteScreen()),
+      MaterialPageRoute(builder: (context) => const AddEditNoteScreenLuxury()),
     );
   }
 
@@ -331,7 +331,7 @@ class _HomeScreenEnhancedState extends State<HomeScreenEnhanced> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddEditNoteScreen(noteId: noteId),
+        builder: (context) => AddEditNoteScreenLuxury(noteId: noteId),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/notes_provider.dart';
-import 'screens/home_screen_enhanced.dart';
+import 'screens/home_screen_luxury.dart';
+import 'utils/modern_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,13 +16,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => NotesProvider(),
       child: MaterialApp(
-        title: 'My Notes App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-          appBarTheme: const AppBarTheme(centerTitle: true),
-        ),
-        home: const HomeScreenEnhanced(),
+        title: 'Modern Notes App',
+        theme: ModernAppTheme.lightTheme,
+        darkTheme: ModernAppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        home: const HomeScreenLuxury(),
         debugShowCheckedModeBanner: false,
       ),
     );

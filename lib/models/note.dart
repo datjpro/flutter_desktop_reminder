@@ -54,10 +54,9 @@ class Note {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt']),
       category: map['category'],
-      tags:
-          map['tags'] != null && map['tags'].isNotEmpty
-              ? map['tags'].split(',').where((tag) => tag.isNotEmpty).toList()
-              : [],
+      tags: map['tags'] != null && map['tags'].toString().isNotEmpty
+          ? map['tags'].toString().split(',').where((tag) => tag.trim().isNotEmpty).toList()
+          : [],
       isFavorite: map['isFavorite'] == 1,
       isCompleted: map['isCompleted'] == 1,
       scheduledDate:

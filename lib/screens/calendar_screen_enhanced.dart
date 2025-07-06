@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../models/note.dart';
 import '../providers/notes_provider.dart';
 import '../widgets/note_card_enhanced.dart';
-import 'add_edit_note_screen_enhanced.dart';
+import 'add_edit_note_screen_luxury.dart';
 
 class CalendarScreenEnhanced extends StatefulWidget {
   const CalendarScreenEnhanced({super.key});
@@ -39,7 +39,7 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
   }
 
   List<Note> _getNotesForDay(DateTime day) {
-    return context.read<NotesProvider>().allNotes.where((note) {
+    return context.read<NotesProvider>().notes.where((note) {
       if (note.scheduledDate == null) return false;
       return isSameDay(note.scheduledDate!, day);
     }).toList();
@@ -372,7 +372,7 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
                             child: NoteCardEnhanced(
                               note: note,
                               onTap:
-                                  () => _navigateToEditNote(context, note.id!),
+                                  () => _navigateToEditNote(context, note),
                               onFavoriteToggle:
                                   () => context
                                       .read<NotesProvider>()
@@ -472,7 +472,7 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
         MaterialPageRoute(
           builder:
               (context) =>
-                  AddEditNoteScreenEnhanced(preSelectedDates: targetDates),
+                  AddEditNoteScreenLuxury(preSelectedDates: targetDates),
         ),
       ).then((_) => _refreshSelectedNotes());
     }
@@ -508,7 +508,7 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
                                 ),
                                 onTap: () {
                                   Navigator.pop(context);
-                                  _navigateToEditNote(context, note.id!);
+                                  _navigateToEditNote(context, note);
                                 },
                               ),
                             )
@@ -543,7 +543,7 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
       context,
       MaterialPageRoute(
         builder:
-            (context) => AddEditNoteScreenEnhanced(
+            (context) => AddEditNoteScreenLuxury(
               scheduledDate: preSelectedDate,
               preSelectedDates: preSelectedDates,
             ),
@@ -551,11 +551,11 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
     ).then((_) => _refreshSelectedNotes());
   }
 
-  void _navigateToEditNote(BuildContext context, int noteId) {
+  void _navigateToEditNote(BuildContext context, Note note) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddEditNoteScreenEnhanced(noteId: noteId),
+        builder: (context) => AddEditNoteScreenLuxury(note: note),
       ),
     ).then((_) => _refreshSelectedNotes());
   }
