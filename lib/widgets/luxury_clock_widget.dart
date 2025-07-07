@@ -167,9 +167,9 @@ class _LuxuryClockWidgetState extends State<LuxuryClockWidget>
       height: widget.size * 0.9,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.1),
+        color: ModernAppTheme.textDark.withOpacity(0.1),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: ModernAppTheme.textDark.withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -194,7 +194,7 @@ class _LuxuryClockWidgetState extends State<LuxuryClockWidget>
                 width: isMainHour ? 3 : 2,
                 height: isMainHour ? 20 : 15,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(isMainHour ? 0.9 : 0.6),
+                  color: ModernAppTheme.textDark.withOpacity(isMainHour ? 0.9 : 0.6),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -225,7 +225,7 @@ class _LuxuryClockWidgetState extends State<LuxuryClockWidget>
             height: widget.size * 0.3,
             margin: EdgeInsets.only(bottom: widget.size * 0.3),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: ModernAppTheme.textDark.withOpacity(0.9),
               borderRadius: BorderRadius.circular(2),
               boxShadow: [
                 BoxShadow(
@@ -246,7 +246,7 @@ class _LuxuryClockWidgetState extends State<LuxuryClockWidget>
             height: widget.size * 0.4,
             margin: EdgeInsets.only(bottom: widget.size * 0.4),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: ModernAppTheme.textDark.withOpacity(0.9),
               borderRadius: BorderRadius.circular(2),
               boxShadow: [
                 BoxShadow(
@@ -297,7 +297,7 @@ class _LuxuryClockWidgetState extends State<LuxuryClockWidget>
       child: Text(
         DateFormat('HH:mm:ss').format(_now),
         style: const TextStyle(
-          color: Colors.white,
+          color: ModernAppTheme.textDark,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           fontFamily: 'monospace',
@@ -310,17 +310,17 @@ class _LuxuryClockWidgetState extends State<LuxuryClockWidget>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: ModernAppTheme.textDark.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: ModernAppTheme.textDark.withOpacity(0.3),
           width: 1,
         ),
       ),
       child: Text(
         DateFormat('MMM dd').format(_now),
         style: const TextStyle(
-          color: Colors.white,
+          color: ModernAppTheme.textDark,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
@@ -393,7 +393,7 @@ class _CompactClockWidgetState extends State<CompactClockWidget> {
               child: Text(
                 DateFormat('HH:mm').format(_now),
                 style: TextStyle(
-                  color: Colors.white,
+                  color: ModernAppTheme.textDark,
                   fontSize: widget.size * 0.2,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'monospace',

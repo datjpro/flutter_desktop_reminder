@@ -32,7 +32,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
   void initState() {
     super.initState();
     _initializeAnimations();
-    
+
     // Load notes when the app starts
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotesProvider>().loadNotes();
@@ -44,25 +44,23 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _fabAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fabAnimationController,
-      curve: Curves.easeOutBack,
-    ));
+    _fabAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _fabAnimationController,
+        curve: Curves.easeOutBack,
+      ),
+    );
 
     _headerAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _headerAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _headerAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    _headerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _headerAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _fabAnimationController.forward();
     _headerAnimationController.forward();
@@ -88,7 +86,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
             children: [
               // Modern Header with Clock
               _buildModernHeader(),
-              
+
               // Content Area
               Expanded(
                 child: Container(
@@ -103,14 +101,12 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                     children: [
                       // Search and Filter Section
                       _buildSearchAndFilter(),
-                      
+
                       // View Mode Selector
                       _buildViewModeSelector(),
-                      
+
                       // Notes Content
-                      Expanded(
-                        child: _buildNotesContent(),
-                      ),
+                      Expanded(child: _buildNotesContent()),
                     ],
                   ),
                 ),
@@ -134,11 +130,11 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                 );
               },
               backgroundColor: ModernAppTheme.primaryPurple,
-              icon: const Icon(Icons.add, color: ModernAppTheme.textWhite),
+              icon: const Icon(Icons.add, color: ModernAppTheme.textDark),
               label: const Text(
                 'New Note',
                 style: TextStyle(
-                  color: ModernAppTheme.textWhite,
+                  color: ModernAppTheme.textDark,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -175,7 +171,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
-                                color: ModernAppTheme.textWhite,
+                                color: ModernAppTheme.textDark,
                               ),
                             ),
                             const SizedBox(height: ModernAppTheme.space8),
@@ -183,20 +179,20 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                               'Manage your notes with style',
                               style: TextStyle(
                                 fontSize: 16,
-                                color: ModernAppTheme.textWhite.withOpacity(0.8),
+                                color: ModernAppTheme.textGray,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      
+
                       // Clock Widget
                       const LuxuryClockWidget(),
                     ],
                   ),
-                  
+
                   const SizedBox(height: ModernAppTheme.space24),
-                  
+
                   // Quick Stats
                   _buildQuickStats(),
                 ],
@@ -212,28 +208,30 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
     return Consumer<NotesProvider>(
       builder: (context, provider, child) {
         final totalNotes = provider.notes.length;
-        final todayNotes = provider.notes.where((note) {
-          final today = DateTime.now();
-          return note.createdAt.day == today.day &&
-              note.createdAt.month == today.month &&
-              note.createdAt.year == today.year;
-        }).length;
-        
+        final todayNotes =
+            provider.notes.where((note) {
+              final today = DateTime.now();
+              return note.createdAt.day == today.day &&
+                  note.createdAt.month == today.month &&
+                  note.createdAt.year == today.year;
+            }).length;
+
         return Container(
           padding: const EdgeInsets.all(ModernAppTheme.space20),
           decoration: BoxDecoration(
-            color: ModernAppTheme.textWhite.withOpacity(0.1),
+            color: ModernAppTheme.textDark.withOpacity(0.1),
             borderRadius: ModernAppTheme.radiusLarge,
-            border: Border.all(
-              color: ModernAppTheme.textWhite.withOpacity(0.2),
-            ),
+            border: Border.all(color: ModernAppTheme.textDark.withOpacity(0.2)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem('Total Notes', totalNotes.toString()),
               _buildStatItem('Today', todayNotes.toString()),
-              _buildStatItem('Tags', _getAllTags(provider.notes).length.toString()),
+              _buildStatItem(
+                'Tags',
+                _getAllTags(provider.notes).length.toString(),
+              ),
             ],
           ),
         );
@@ -249,7 +247,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: ModernAppTheme.textWhite,
+            color: ModernAppTheme.textDark,
           ),
         ),
         const SizedBox(height: ModernAppTheme.space4),
@@ -257,7 +255,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
           label,
           style: TextStyle(
             fontSize: 12,
-            color: ModernAppTheme.textWhite.withOpacity(0.8),
+            color: ModernAppTheme.textDark.withOpacity(0.8),
           ),
         ),
       ],
@@ -294,9 +292,9 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
               ),
             ),
           ),
-          
+
           const SizedBox(height: ModernAppTheme.space16),
-          
+
           // Tags Filter
           _buildTagsFilter(),
         ],
@@ -308,11 +306,11 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
     return Consumer<NotesProvider>(
       builder: (context, provider, child) {
         final allTags = _getAllTags(provider.notes);
-        
+
         if (allTags.isEmpty) {
           return const SizedBox.shrink();
         }
-        
+
         return SizedBox(
           height: 40,
           child: ListView.builder(
@@ -333,14 +331,15 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                     backgroundColor: ModernAppTheme.surfaceGray,
                     selectedColor: ModernAppTheme.primaryPurple,
                     labelStyle: TextStyle(
-                      color: _selectedTag == null
-                          ? ModernAppTheme.textWhite
-                          : ModernAppTheme.textDark,
+                      color:
+                          _selectedTag == null
+                              ? ModernAppTheme.textDark
+                              : ModernAppTheme.textDark,
                     ),
                   ),
                 );
               }
-              
+
               final tag = allTags[index - 1];
               return Padding(
                 padding: const EdgeInsets.only(right: ModernAppTheme.space8),
@@ -355,9 +354,10 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                   backgroundColor: ModernAppTheme.surfaceGray,
                   selectedColor: ModernAppTheme.primaryPurple,
                   labelStyle: TextStyle(
-                    color: _selectedTag == tag
-                        ? ModernAppTheme.textWhite
-                        : ModernAppTheme.textDark,
+                    color:
+                        _selectedTag == tag
+                            ? ModernAppTheme.textDark
+                            : ModernAppTheme.textDark,
                   ),
                 ),
               );
@@ -378,16 +378,8 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
       ),
       child: Row(
         children: [
-          _buildViewModeButton(
-            ViewMode.grid,
-            Icons.grid_view,
-            'Grid',
-          ),
-          _buildViewModeButton(
-            ViewMode.list,
-            Icons.list,
-            'List',
-          ),
+          _buildViewModeButton(ViewMode.grid, Icons.grid_view, 'Grid'),
+          _buildViewModeButton(ViewMode.list, Icons.list, 'List'),
           _buildViewModeButton(
             ViewMode.calendar,
             Icons.calendar_month,
@@ -400,7 +392,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
 
   Widget _buildViewModeButton(ViewMode mode, IconData icon, String label) {
     final isSelected = _currentViewMode == mode;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -415,9 +407,8 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
             vertical: ModernAppTheme.space8,
           ),
           decoration: BoxDecoration(
-            color: isSelected 
-                ? ModernAppTheme.primaryPurple 
-                : Colors.transparent,
+            color:
+                isSelected ? ModernAppTheme.primaryPurple : Colors.transparent,
             borderRadius: ModernAppTheme.radiusSmall,
           ),
           child: Row(
@@ -425,18 +416,20 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
             children: [
               Icon(
                 icon,
-                color: isSelected 
-                    ? ModernAppTheme.textWhite 
-                    : ModernAppTheme.textGray,
+                color:
+                    isSelected
+                        ? ModernAppTheme.textDark
+                        : ModernAppTheme.textGray,
                 size: 20,
               ),
               const SizedBox(width: ModernAppTheme.space8),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected 
-                      ? ModernAppTheme.textWhite 
-                      : ModernAppTheme.textGray,
+                  color:
+                      isSelected
+                          ? ModernAppTheme.textDark
+                          : ModernAppTheme.textGray,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 ),
               ),
@@ -451,11 +444,11 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
     return Consumer<NotesProvider>(
       builder: (context, provider, child) {
         final filteredNotes = _getFilteredNotes(provider.notes);
-        
+
         if (filteredNotes.isEmpty) {
           return _buildEmptyState();
         }
-        
+
         switch (_currentViewMode) {
           case ViewMode.grid:
             return _buildGridView(filteredNotes);
@@ -503,9 +496,7 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
   Widget _buildNoteCard(Note note) {
     return Card(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: ModernAppTheme.radiusMedium,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: ModernAppTheme.radiusMedium),
       child: Container(
         decoration: BoxDecoration(
           color: ModernAppTheme.surfaceWhite,
@@ -538,9 +529,9 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 const SizedBox(height: ModernAppTheme.space8),
-                
+
                 // Content
                 Text(
                   note.content,
@@ -551,37 +542,40 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 const SizedBox(height: ModernAppTheme.space12),
-                
+
                 // Tags
                 if (note.tags.isNotEmpty) ...[
                   Wrap(
                     spacing: ModernAppTheme.space4,
-                    children: note.tags.take(3).map((tag) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: ModernAppTheme.space8,
-                          vertical: ModernAppTheme.space4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: ModernAppTheme.primaryPurple.withOpacity(0.1),
-                          borderRadius: ModernAppTheme.radiusSmall,
-                        ),
-                        child: Text(
-                          tag,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: ModernAppTheme.primaryPurple,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                    children:
+                        note.tags.take(3).map((tag) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: ModernAppTheme.space8,
+                              vertical: ModernAppTheme.space4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: ModernAppTheme.primaryPurple.withOpacity(
+                                0.1,
+                              ),
+                              borderRadius: ModernAppTheme.radiusSmall,
+                            ),
+                            child: Text(
+                              tag,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: ModernAppTheme.primaryPurple,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: ModernAppTheme.space8),
                 ],
-                
+
                 // Date
                 Text(
                   DateFormat('MMM dd, yyyy').format(note.createdAt),
@@ -599,50 +593,41 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
   }
 
   Widget _buildEmptyState() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(ModernAppTheme.space20),
-      child: Center(
+    return Center(
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: ModernAppTheme.space32),
-            
             Container(
-              padding: const EdgeInsets.all(ModernAppTheme.space20),
+              padding: const EdgeInsets.all(ModernAppTheme.space24),
               decoration: BoxDecoration(
                 color: ModernAppTheme.surfaceGray,
                 borderRadius: ModernAppTheme.radiusXL,
               ),
               child: const Icon(
                 Icons.note_alt_outlined,
-                size: 48,
+                size: 64,
                 color: ModernAppTheme.textLight,
               ),
             ),
-            
-            const SizedBox(height: ModernAppTheme.space20),
-            
+
+            const SizedBox(height: ModernAppTheme.space24),
+
             const Text(
               'No notes yet',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: FontWeight.w600,
                 color: ModernAppTheme.textDark,
               ),
             ),
-            
+
             const SizedBox(height: ModernAppTheme.space8),
-            
+
             const Text(
               'Create your first note to get started',
-              style: TextStyle(
-                fontSize: 14,
-                color: ModernAppTheme.textGray,
-              ),
-              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: ModernAppTheme.textGray),
             ),
-            
-            const SizedBox(height: ModernAppTheme.space32),
           ],
         ),
       ),
@@ -651,22 +636,26 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
 
   List<Note> _getFilteredNotes(List<Note> notes) {
     List<Note> filteredNotes = notes;
-    
+
     // Filter by search query
     if (_searchQuery.isNotEmpty) {
-      filteredNotes = filteredNotes.where((note) {
-        return note.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            note.content.toLowerCase().contains(_searchQuery.toLowerCase());
-      }).toList();
+      filteredNotes =
+          filteredNotes.where((note) {
+            return note.title.toLowerCase().contains(
+                  _searchQuery.toLowerCase(),
+                ) ||
+                note.content.toLowerCase().contains(_searchQuery.toLowerCase());
+          }).toList();
     }
-    
+
     // Filter by selected tag
     if (_selectedTag != null) {
-      filteredNotes = filteredNotes.where((note) {
-        return note.tags.contains(_selectedTag);
-      }).toList();
+      filteredNotes =
+          filteredNotes.where((note) {
+            return note.tags.contains(_selectedTag);
+          }).toList();
     }
-    
+
     return filteredNotes;
   }
 

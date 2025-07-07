@@ -242,14 +242,14 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
               // Back Button
               Container(
                 decoration: BoxDecoration(
-                  color: ModernAppTheme.textWhite.withOpacity(0.1),
+                  color: ModernAppTheme.textDark.withOpacity(0.1),
                   borderRadius: ModernAppTheme.radiusMedium,
                 ),
                 child: IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: ModernAppTheme.textWhite,
+                    color: ModernAppTheme.textDark,
                   ),
                 ),
               ),
@@ -260,7 +260,7 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: ModernAppTheme.textWhite,
+                  color: ModernAppTheme.textDark,
                 ),
               ),
               
@@ -317,12 +317,12 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? ModernAppTheme.textWhite.withOpacity(0.2)
-              : ModernAppTheme.textWhite.withOpacity(0.1),
+              ? ModernAppTheme.textDark.withOpacity(0.2)
+              : ModernAppTheme.textDark.withOpacity(0.1),
           borderRadius: ModernAppTheme.radiusMedium,
           border: isSelected
               ? Border.all(
-                  color: ModernAppTheme.textWhite.withOpacity(0.3),
+                  color: ModernAppTheme.textDark.withOpacity(0.3),
                 )
               : null,
         ),
@@ -332,8 +332,8 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
             Icon(
               icon,
               color: isSelected
-                  ? ModernAppTheme.textWhite
-                  : ModernAppTheme.textWhite.withOpacity(0.7),
+                  ? ModernAppTheme.textDark
+                  : ModernAppTheme.textDark.withOpacity(0.7),
               size: 20,
             ),
             const SizedBox(width: ModernAppTheme.space8),
@@ -341,8 +341,8 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
               label,
               style: TextStyle(
                 color: isSelected
-                    ? ModernAppTheme.textWhite
-                    : ModernAppTheme.textWhite.withOpacity(0.7),
+                    ? ModernAppTheme.textDark
+                    : ModernAppTheme.textDark.withOpacity(0.7),
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
             ),
@@ -721,7 +721,7 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
             onPressed: _isLoading ? null : _saveNote,
             style: ElevatedButton.styleFrom(
               backgroundColor: ModernAppTheme.primaryPurple,
-              foregroundColor: ModernAppTheme.textWhite,
+              foregroundColor: ModernAppTheme.textDark,
               padding: const EdgeInsets.symmetric(vertical: ModernAppTheme.space16),
               shape: RoundedRectangleBorder(
                 borderRadius: ModernAppTheme.radiusMedium,
@@ -734,7 +734,7 @@ class _AddEditNoteScreenLuxuryState extends State<AddEditNoteScreenLuxury>
                     width: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(ModernAppTheme.textWhite),
+                      valueColor: AlwaysStoppedAnimation<Color>(ModernAppTheme.textDark),
                     ),
                   )
                 : Text(

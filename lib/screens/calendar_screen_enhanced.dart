@@ -194,206 +194,210 @@ class _CalendarScreenEnhancedState extends State<CalendarScreenEnhanced> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Selection mode indicator
-          if (_isMultiSelectMode ||
-              _rangeSelectionMode == RangeSelectionMode.toggledOn)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              color: Colors.blue.withOpacity(0.1),
-              child: Row(
-                children: [
-                  Icon(
-                    _isMultiSelectMode ? Icons.touch_app : Icons.date_range,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    _isMultiSelectMode
-                        ? 'Multi-select mode: ${_multiSelectedDays.length} days selected'
-                        : 'Range selection mode',
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const Spacer(),
-                  if (_isMultiSelectMode && _multiSelectedDays.isNotEmpty)
-                    TextButton(
-                      onPressed:
-                          () => setState(() => _multiSelectedDays.clear()),
-                      child: const Text('Clear'),
-                    ),
-                ],
-              ),
-            ),
-
-          // Calendar
-          Consumer<NotesProvider>(
-            builder: (context, notesProvider, child) {
-              return TableCalendar<Note>(
-                firstDay: DateTime.utc(2020, 1, 1),
-                lastDay: DateTime.utc(2030, 12, 31),
-                focusedDay: _focusedDay,
-                calendarFormat: _calendarFormat,
-                eventLoader: _getNotesForDay,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                rangeSelectionMode: _rangeSelectionMode,
-                calendarStyle: CalendarStyle(
-                  outsideDaysVisible: false,
-                  markersMaxCount: 3,
-                  markerDecoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: _isMultiSelectMode ? Colors.blue : Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  rangeStartDecoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  rangeEndDecoration: const BoxDecoration(
-                    color: Colors.deepPurple,
-                    shape: BoxShape.circle,
-                  ),
-                  rangeHighlightColor: Colors.deepPurple.withOpacity(0.2),
-                  withinRangeDecoration: BoxDecoration(
-                    color: Colors.deepPurple.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                onDaySelected:
-                    _rangeSelectionMode == RangeSelectionMode.toggledOff
-                        ? _onDaySelected
-                        : null,
-                onRangeSelected:
-                    _rangeSelectionMode == RangeSelectionMode.toggledOn
-                        ? _onRangeSelected
-                        : null,
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
-                selectedDayPredicate: (day) {
-                  if (_isMultiSelectMode) {
-                    return _multiSelectedDays.contains(day);
-                  }
-                  return isSameDay(_selectedDay, day);
-                },
-                rangeStartDay: _rangeStart,
-                rangeEndDay: _rangeEnd,
-              );
-            },
-          ),
-
-          const Divider(height: 1),
-
-          // Action buttons for multi-selection
-          if ((_isMultiSelectMode && _multiSelectedDays.isNotEmpty) ||
-              (_rangeStart != null && _rangeEnd != null))
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => _createNoteForSelectedDays(),
-                    icon: const Icon(Icons.add),
-                    label: Text(
-                      _isMultiSelectMode
-                          ? 'Create Note for ${_multiSelectedDays.length} Days'
-                          : 'Create Note for Range',
-                    ),
-                  ),
-                  if (_isMultiSelectMode && _multiSelectedDays.isNotEmpty)
-                    OutlinedButton.icon(
-                      onPressed: () => _viewSelectedDaysNotes(),
-                      icon: const Icon(Icons.view_list),
-                      label: const Text('View All Notes'),
-                    ),
-                ],
-              ),
-            ),
-
-          // Selected day's notes
-          Expanded(
-            child: ValueListenableBuilder<List<Note>>(
-              valueListenable: _selectedNotes,
-              builder: (context, notes, _) {
-                if (notes.isEmpty) {
-                  return _buildEmptyState();
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Selection mode indicator
+            if (_isMultiSelectMode ||
+                _rangeSelectionMode == RangeSelectionMode.toggledOn)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                color: Colors.blue.withOpacity(0.1),
+                child: Row(
                   children: [
-                    // Header
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _getHeaderText(),
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Text(
-                            '${notes.length} note${notes.length == 1 ? '' : 's'}',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey[600]),
-                          ),
-                        ],
+                    Icon(
+                      _isMultiSelectMode ? Icons.touch_app : Icons.date_range,
+                      color: Colors.blue,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      _isMultiSelectMode
+                          ? 'Multi-select mode: ${_multiSelectedDays.length} days selected'
+                          : 'Range selection mode',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-
-                    // Notes list
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: notes.length,
-                        itemBuilder: (context, index) {
-                          final note = notes[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: NoteCardEnhanced(
-                              note: note,
-                              onTap:
-                                  () => _navigateToEditNote(context, note),
-                              onFavoriteToggle:
-                                  () => context
-                                      .read<NotesProvider>()
-                                      .toggleFavorite(note),
-                              onCompletionToggle:
-                                  () => context
-                                      .read<NotesProvider>()
-                                      .toggleCompletion(note),
-                              onDelete:
-                                  () => _showDeleteDialog(context, note.id!),
-                            ),
-                          );
-                        },
+                    const Spacer(),
+                    if (_isMultiSelectMode && _multiSelectedDays.isNotEmpty)
+                      TextButton(
+                        onPressed:
+                            () => setState(() => _multiSelectedDays.clear()),
+                        child: const Text('Clear'),
                       ),
-                    ),
                   ],
+                ),
+              ),
+
+            // Calendar
+            Consumer<NotesProvider>(
+              builder: (context, notesProvider, child) {
+                return TableCalendar<Note>(
+                  firstDay: DateTime.utc(2020, 1, 1),
+                  lastDay: DateTime.utc(2030, 12, 31),
+                  focusedDay: _focusedDay,
+                  calendarFormat: _calendarFormat,
+                  eventLoader: _getNotesForDay,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  rangeSelectionMode: _rangeSelectionMode,
+                  calendarStyle: CalendarStyle(
+                    outsideDaysVisible: false,
+                    markersMaxCount: 3,
+                    markerDecoration: const BoxDecoration(
+                      color: Colors.deepPurple,
+                      shape: BoxShape.circle,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      color:
+                          _isMultiSelectMode ? Colors.blue : Colors.deepPurple,
+                      shape: BoxShape.circle,
+                    ),
+                    rangeStartDecoration: const BoxDecoration(
+                      color: Colors.deepPurple,
+                      shape: BoxShape.circle,
+                    ),
+                    rangeEndDecoration: const BoxDecoration(
+                      color: Colors.deepPurple,
+                      shape: BoxShape.circle,
+                    ),
+                    rangeHighlightColor: Colors.deepPurple.withOpacity(0.2),
+                    withinRangeDecoration: BoxDecoration(
+                      color: Colors.deepPurple.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  onDaySelected:
+                      _rangeSelectionMode == RangeSelectionMode.toggledOff
+                          ? _onDaySelected
+                          : null,
+                  onRangeSelected:
+                      _rangeSelectionMode == RangeSelectionMode.toggledOn
+                          ? _onRangeSelected
+                          : null,
+                  onFormatChanged: (format) {
+                    if (_calendarFormat != format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+                  selectedDayPredicate: (day) {
+                    if (_isMultiSelectMode) {
+                      return _multiSelectedDays.contains(day);
+                    }
+                    return isSameDay(_selectedDay, day);
+                  },
+                  rangeStartDay: _rangeStart,
+                  rangeEndDay: _rangeEnd,
                 );
               },
             ),
-          ),
-        ],
+
+            const Divider(height: 1),
+
+            // Action buttons for multi-selection
+            if ((_isMultiSelectMode && _multiSelectedDays.isNotEmpty) ||
+                (_rangeStart != null && _rangeEnd != null))
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _createNoteForSelectedDays(),
+                      icon: const Icon(Icons.add),
+                      label: Text(
+                        _isMultiSelectMode
+                            ? 'Create Note for ${_multiSelectedDays.length} Days'
+                            : 'Create Note for Range',
+                      ),
+                    ),
+                    if (_isMultiSelectMode && _multiSelectedDays.isNotEmpty)
+                      OutlinedButton.icon(
+                        onPressed: () => _viewSelectedDaysNotes(),
+                        icon: const Icon(Icons.view_list),
+                        label: const Text('View All Notes'),
+                      ),
+                  ],
+                ),
+              ),
+
+            // Selected day's notes
+            Container(
+              height: 300, // Fixed height instead of Expanded
+              child: ValueListenableBuilder<List<Note>>(
+                valueListenable: _selectedNotes,
+                builder: (context, notes, _) {
+                  if (notes.isEmpty) {
+                    return _buildEmptyState();
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _getHeaderText(),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Text(
+                              '${notes.length} note${notes.length == 1 ? '' : 's'}',
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Notes list
+                      Container(
+                        height: 200, // Fixed height for notes list
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: notes.length,
+                          itemBuilder: (context, index) {
+                            final note = notes[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: NoteCardEnhanced(
+                                note: note,
+                                onTap: () => _navigateToEditNote(context, note),
+                                onFavoriteToggle:
+                                    () => context
+                                        .read<NotesProvider>()
+                                        .toggleFavorite(note),
+                                onCompletionToggle:
+                                    () => context
+                                        .read<NotesProvider>()
+                                        .toggleCompletion(note),
+                                onDelete:
+                                    () => _showDeleteDialog(context, note.id!),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToAddNote(context),
