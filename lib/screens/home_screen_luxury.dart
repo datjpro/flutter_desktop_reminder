@@ -7,9 +7,9 @@ import '../models/note.dart';
 import '../widgets/luxury_clock_widget.dart';
 import '../utils/modern_theme.dart';
 import 'add_edit_note_screen_luxury.dart';
-import 'calendar_screen_enhanced.dart';
+import 'calendar_screen_simple.dart';
 
-enum ViewMode { grid, list, calendar }
+enum ViewMode { grid, list }
 
 class HomeScreenLuxury extends StatefulWidget {
   const HomeScreenLuxury({super.key});
@@ -380,12 +380,51 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
         children: [
           _buildViewModeButton(ViewMode.grid, Icons.grid_view, 'Grid'),
           _buildViewModeButton(ViewMode.list, Icons.list, 'List'),
-          _buildViewModeButton(
-            ViewMode.calendar,
-            Icons.calendar_month,
-            'Calendar',
-          ),
+          _buildCalendarButton(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCalendarButton() {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CalendarScreenSimple(),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: ModernAppTheme.space12,
+            vertical: ModernAppTheme.space8,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: ModernAppTheme.radiusSmall,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.calendar_month,
+                color: ModernAppTheme.textGray,
+                size: 20,
+              ),
+              const SizedBox(width: ModernAppTheme.space8),
+              Text(
+                'Calendar',
+                style: TextStyle(
+                  color: ModernAppTheme.textGray,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -454,8 +493,6 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
             return _buildGridView(filteredNotes);
           case ViewMode.list:
             return _buildListView(filteredNotes);
-          case ViewMode.calendar:
-            return _buildCalendarView();
         }
       },
     );
@@ -487,10 +524,6 @@ class _HomeScreenLuxuryState extends State<HomeScreenLuxury>
         );
       },
     );
-  }
-
-  Widget _buildCalendarView() {
-    return const CalendarScreenEnhanced();
   }
 
   Widget _buildNoteCard(Note note) {
