@@ -3,13 +3,14 @@ import '../models/note.dart';
 import '../database/database_helper.dart';
 
 enum ViewMode { list, calendar, completed }
+
 enum SortBy { dateCreated, dateUpdated, title, priority }
 
 class NotesProvider with ChangeNotifier {
   List<Note> _notes = [];
   List<Note> _filteredNotes = [];
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  
+
   // Filter and search state
   String _searchQuery = '';
   String _selectedCategory = '';
@@ -192,63 +193,64 @@ class NotesProvider with ChangeNotifier {
 
   // Apply filters to notes list
   void _applyFilters() {
-    _filteredNotes = _notes.where((note) {
-      // Search filter
-      if (_searchQuery.isNotEmpty) {
-        final query = _searchQuery.toLowerCase();
-        if (!note.title.toLowerCase().contains(query) &&
-            !note.content.toLowerCase().contains(query) &&
-            !note.tags.any((tag) => tag.toLowerCase().contains(query))) {
-          return false;
-        }
-      }
+    _filteredNotes =
+        _notes.where((note) {
+          // Search filter
+          if (_searchQuery.isNotEmpty) {
+            final query = _searchQuery.toLowerCase();
+            if (!note.title.toLowerCase().contains(query) &&
+                !note.content.toLowerCase().contains(query) &&
+                !note.tags.any((tag) => tag.toLowerCase().contains(query))) {
+              return false;
+            }
+          }
 
-      // Category filter
-      if (_selectedCategory.isNotEmpty) {
-        if (note.category != _selectedCategory) {
-          return false;
-        }
-      }
+          // Category filter
+          if (_selectedCategory.isNotEmpty) {
+            if (note.category != _selectedCategory) {
+              return false;
+            }
+          }
 
-      // Tag filter
-      if (_selectedTag.isNotEmpty) {
-        if (!note.tags.contains(_selectedTag)) {
-          return false;
-        }
-      }
+          // Tag filter
+          if (_selectedTag.isNotEmpty) {
+            if (!note.tags.contains(_selectedTag)) {
+              return false;
+            }
+          }
 
-      // Priority filter
-      if (_selectedPriority != null) {
-        if (note.priority != _selectedPriority) {
-          return false;
-        }
-      }
+          // Priority filter
+          if (_selectedPriority != null) {
+            if (note.priority != _selectedPriority) {
+              return false;
+            }
+          }
 
-      // Date filter
-      if (_selectedDate != null) {
-        if (note.scheduledDate == null ||
-            !_isSameDay(note.scheduledDate!, _selectedDate!)) {
-          return false;
-        }
-      }
+          // Date filter
+          if (_selectedDate != null) {
+            if (note.scheduledDate == null ||
+                !_isSameDay(note.scheduledDate!, _selectedDate!)) {
+              return false;
+            }
+          }
 
-      // Favorites filter
-      if (_showFavoritesOnly && !note.isFavorite) {
-        return false;
-      }
+          // Favorites filter
+          if (_showFavoritesOnly && !note.isFavorite) {
+            return false;
+          }
 
-      // Completed filter
-      if (_showCompletedOnly && !note.isCompleted) {
-        return false;
-      }
+          // Completed filter
+          if (_showCompletedOnly && !note.isCompleted) {
+            return false;
+          }
 
-      // View mode filter
-      if (_viewMode == ViewMode.completed && !note.isCompleted) {
-        return false;
-      }
+          // View mode filter
+          if (_viewMode == ViewMode.completed && !note.isCompleted) {
+            return false;
+          }
 
-      return true;
-    }).toList();
+          return true;
+        }).toList();
 
     // Apply sorting
     _filteredNotes.sort((a, b) {
@@ -318,6 +320,15 @@ class NotesProvider with ChangeNotifier {
     } catch (e) {
       return null;
     }
+  }
+
+  // Get notes for today
+  List<Note> getTodayNotes() {
+    final today = DateTime.now();
+    return _notes.where((note) {
+      if (note.scheduledDate == null) return false;
+      return _isSameDay(note.scheduledDate!, today);
+    }).toList();
   }
 
   // Statistics
