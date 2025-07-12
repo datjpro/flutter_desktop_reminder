@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'providers/notes_provider.dart';
-import 'widgets/simple_desktop_app.dart';
+import 'widgets/mini_desktop_app.dart';
 import 'utils/modern_theme.dart';
 import 'dart:io';
 
@@ -17,12 +17,9 @@ void main() async {
       size: Size(1200, 800),
       center: true,
       backgroundColor: Colors.transparent,
-      skipTaskbar: false, // ĐẢM BẢO luôn hiện trong taskbar
+      skipTaskbar: false,
       titleBarStyle: TitleBarStyle.normal,
       windowButtonVisibility: true,
-      alwaysOnTop: false,
-      fullScreen: false,
-      minimumSize: Size(320, 450), // Kích thước tối thiểu
     );
 
     windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -46,7 +43,7 @@ class MyApp extends StatelessWidget {
         theme: ModernAppTheme.lightTheme,
         darkTheme: ModernAppTheme.darkTheme,
         themeMode: ThemeMode.system,
-        home: const SimpleDesktopApp(),
+        home: const MiniDesktopApp(),
         debugShowCheckedModeBanner: false,
       ),
     );

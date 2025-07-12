@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:window_manager/window_manager.dart';
 import '../providers/notes_provider.dart';
 import '../screens/home_screen_luxury.dart';
 import '../widgets/quick_note_dialog.dart';
-import '../widgets/window_test_widget.dart';
 
 class SimpleDesktopApp extends StatefulWidget {
   const SimpleDesktopApp({super.key});
@@ -13,92 +11,8 @@ class SimpleDesktopApp extends StatefulWidget {
   State<SimpleDesktopApp> createState() => _SimpleDesktopAppState();
 }
 
-class _SimpleDesktopAppState extends State<SimpleDesktopApp>
-    with WindowListener {
+class _SimpleDesktopAppState extends State<SimpleDesktopApp> {
   bool _isMiniMode = false;
-  bool _isMinimized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    windowManager.addListener(this);
-    _setupWindow();
-  }
-
-  Future<void> _setupWindow() async {
-    // Đảm bảo cửa sổ luôn hiển thị trong taskbar
-    await windowManager.setSkipTaskbar(false);
-    await windowManager.setPreventClose(false);
-  }
-
-  @override
-  void onWindowRestore() {
-    setState(() {
-      _isMinimized = false;
-    });
-  }
-
-  @override
-  void onWindowMinimize() {
-    setState(() {
-      _isMinimized = true;
-    });
-  }
-
-  @override
-  void onWindowFocus() {
-    setState(() {
-      _isMinimized = false;
-    });
-  }
-
-  @override
-  void dispose() {
-    windowManager.removeListener(this);
-    super.dispose();
-  }
-
-  Future<void> _switchToMiniMode() async {
-    setState(() {
-      _isMiniMode = true;
-    });
-
-    // Thay đổi window properties với đảm bảo an toàn
-    await windowManager.setSize(const Size(320, 450));
-    await windowManager.setAlwaysOnTop(true);
-    await windowManager.setResizable(false);
-    await windowManager.setSkipTaskbar(
-      false,
-    ); // ĐẢM BẢO luôn hiện trong taskbar
-    await windowManager.setPreventClose(false); // Cho phép đóng bình thường
-    await windowManager.setTitle('Notes Mini - Thu nhỏ để ẩn');
-
-    // Đặt ở góc phải màn hình
-    await windowManager.setPosition(const Offset(1580, 100));
-
-    // Đảm bảo cửa sổ được focus
-    await windowManager.show();
-    await windowManager.focus();
-  }
-
-  Future<void> _switchToFullMode() async {
-    setState(() {
-      _isMiniMode = false;
-      _isMinimized = false;
-    });
-
-    // Khôi phục window properties
-    await windowManager.setSize(const Size(1200, 800));
-    await windowManager.setAlwaysOnTop(false);
-    await windowManager.setResizable(true);
-    await windowManager.setSkipTaskbar(false); // Đảm bảo vẫn hiện trong taskbar
-    await windowManager.setTitle('Notes App');
-    await windowManager.center();
-
-    // Đảm bảo cửa sổ được hiển thị và focus
-    await windowManager.show();
-    await windowManager.focus();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +41,11 @@ class _SimpleDesktopAppState extends State<SimpleDesktopApp>
               ],
             ),
             child: IconButton(
-              onPressed: _switchToMiniMode,
+              onPressed: () {
+                setState(() {
+                  _isMiniMode = true;
+                });
+              },
               icon: const Icon(Icons.minimize, color: Colors.white),
               tooltip: 'Chế độ Mini',
             ),
@@ -172,7 +90,11 @@ class _SimpleDesktopAppState extends State<SimpleDesktopApp>
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: IconButton(
-                    onPressed: _switchToFullMode,
+                    onPressed: () {
+                      setState(() {
+                        _isMiniMode = false;
+                      });
+                    },
                     icon: const Icon(Icons.fullscreen, color: Colors.white),
                     tooltip: 'Chế độ đầy đủ',
                   ),
@@ -189,13 +111,11 @@ class _SimpleDesktopAppState extends State<SimpleDesktopApp>
                 color: Colors.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _isMinimized
-                        ? '🔸 Đã thu nhỏ - Mở lại từ taskbar'
-                        : '🔹 Chế độ Mini - Luôn hiển thị',
+                    '🔹 Chế độ Mini đang hoạt động',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -204,7 +124,7 @@ class _SimpleDesktopAppState extends State<SimpleDesktopApp>
                   ),
                   SizedBox(height: 4),
                   Text(
-                    '• Nhấn ⛶ để chuyển chế độ đầy đủ\n• Nhấn "Thu nhỏ" để ẩn vào taskbar\n• Mở lại từ taskbar hoặc Alt+Tab\n• Không thể bị mất hoàn toàn',
+                    '• Nhấn ⛶ để chế độ đầy đủ\n• Cửa sổ này luôn hiển thị\n• Không thể bị ẩn hoàn toàn',
                     style: TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ],
@@ -244,7 +164,7 @@ class _SimpleDesktopAppState extends State<SimpleDesktopApp>
 
             const SizedBox(height: 16),
 
-            // Nút thêm ghi chú và khôi phục khẩn cấp
+            // Nút thêm ghi chú
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -265,101 +185,24 @@ class _SimpleDesktopAppState extends State<SimpleDesktopApp>
             ),
 
             const SizedBox(height: 8),
-            // Nút khôi phục khẩn cấp
+
+            // Nút xem danh sách
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () async {
-                  // Khôi phục cửa sổ về trạng thái an toàn
-                  await windowManager.setSkipTaskbar(false);
-                  await windowManager.show();
-                  await windowManager.focus();
-                  await windowManager.setAlwaysOnTop(false);
-                  await windowManager.setAlwaysOnTop(true);
-
+                onPressed: () {
                   setState(() {
-                    _isMinimized = false;
+                    _isMiniMode = false;
                   });
-
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Đã khôi phục cửa sổ về trạng thái an toàn',
-                        ),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  }
                 },
-                icon: const Icon(Icons.refresh, size: 14),
-                label: const Text(
-                  'Khôi phục khẩn cấp',
-                  style: TextStyle(fontSize: 11),
-                ),
+                icon: const Icon(Icons.list, size: 16),
+                label: const Text('Xem danh sách đầy đủ'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white),
-                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                 ),
               ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Nút xem danh sách và ẩn
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _switchToFullMode,
-                    icon: const Icon(Icons.list, size: 14),
-                    label: const Text(
-                      'Xem đầy đủ',
-                      style: TextStyle(fontSize: 11),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      // Đảm bảo không bị ẩn hoàn toàn
-                      await windowManager.setSkipTaskbar(false);
-                      await windowManager.minimize();
-
-                      // Hiển thị thông báo
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Ứng dụng đã được thu nhỏ. Nhấn vào biểu tượng trong taskbar để mở lại.',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            duration: Duration(seconds: 3),
-                            backgroundColor: Colors.blue,
-                          ),
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 14),
-                    label: const Text(
-                      'Thu nhỏ',
-                      style: TextStyle(fontSize: 11),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                    ),
-                  ),
-                ),
-              ],
             ),
 
             const Spacer(),
